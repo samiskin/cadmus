@@ -4,7 +4,7 @@ import t from '../src/type.js';
 describe('type definition', () => {
     it('works with nested objects', () => {
         const sig = t.shape({
-            color: t.string.isRequired,
+            color: t.string.optional,
             fontSize: t.number,
             options: t.shape({
                 rounded: t.bool,
@@ -14,7 +14,7 @@ describe('type definition', () => {
             }).strict,
         });
 
-        assert.equal(sig.param.color.isRequired, null);
+        assert.equal(sig.param.color.optional, null);
         assert.equal(sig.param.strictOptions.strict, null);
 
         assert.equal(

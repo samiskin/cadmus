@@ -1,7 +1,7 @@
-function basic(type, isRequired = false) {
+function basic(type, optional = false) {
     return {
         type,
-        isRequired: isRequired ? null
+        optional: optional ? null
             : basic(type, true),
     };
 }
