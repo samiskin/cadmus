@@ -5,6 +5,9 @@ import t from '../src/type.js';
 
 describe('the type checker', () => {
     it('works with primitives', () => {
+        assert.isTrue(check(t.string, 'string'));
+        assert.instanceOf(check(t.array, true), Error);
+
         const primitives = Object.keys(primitiveTests);
         primitives.forEach((typeA) => {
             assert.isTrue(check(t[typeA], primitiveTests[typeA]));

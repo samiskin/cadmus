@@ -9,15 +9,16 @@ describe('type definition', () => {
             options: t.shape({
                 rounded: t.bool,
             }),
+            strictOptions: t.shape({
+                sizes: t.arrayOf(t.number),
+            }).strict,
         });
 
-        assert.equal(
-            sig.data.fontSize.isRequired.optional,
-            false
-        );
+        assert.equal(sig.param.color.isRequired, null);
+        assert.equal(sig.param.strictOptions.strict, null);
 
         assert.equal(
-            sig.data.options.data.rounded.type,
+            sig.param.options.param.rounded.type,
             'bool'
         );
     });

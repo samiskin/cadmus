@@ -4,7 +4,7 @@ class JanusError extends Error {
     constructor(data) {
         super('');
         switch (data.type) {
-            case 'primitive': {
+            case 'type-error': {
                 const {expected, actual} = data;
                 this.message = `expected ${expected}, received ${actual}`;
                 break;
@@ -13,21 +13,20 @@ class JanusError extends Error {
     }
 }
 
-function createPrimitiveChecker(type) {
-    const validate = (element) => {
-        const elementType = getType(element);
-        if (elementType === type) {
-            return true;
-        }
-
+function validateType(type, element) {
+    const elementType = getType(element);
+    if (elementType !== type) {
         throw new JanusError({
-            type: 'primitive',
+            type: 'type-error',
             expected: type,
             actual: elementType,
         });
-    };
-    return validate;
+    }
+
+    return true;
 }
+
+const createPrimitiveChecker = (type) => (ele) => validateType(type, ele);
 
 export const primitives = [
     'array',

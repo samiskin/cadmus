@@ -1,16 +1,27 @@
 function basic(type, isRequired = false) {
     return {
         type,
-        optional: !isRequired,
         isRequired: isRequired ? null
             : basic(type, true),
     };
 }
 
 function parameterized(name) {
-    return (data) => ({
+    return (param) => ({
         ...basic(name),
-        data,
+        param,
+    });
+}
+
+function shapeType() {
+    return (param) => ({
+        ...basic('shape'),
+        param,
+        strict: {
+            ...basic('shape'),
+            param,
+            strict: null,
+        }
     });
 }
 
@@ -35,7 +46,8 @@ const t = {
     objectOf: parameterized('objectOf'),
     oneOf: parameterized('oneOf'),
     oneOfType: parameterized('oneOfType'),
-    shape: parameterized('shape'),
+    shape: shapeType(),
 };
+
 
 export default t;
