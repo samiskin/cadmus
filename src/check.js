@@ -66,4 +66,12 @@ const checkers = {
     // shape:
 };
 
-export default checkers;
+function check(sig, obj) {
+    try {
+        return checkers[sig.type](obj, sig);
+    } catch (e) {
+        return e;
+    }
+}
+
+export default check;

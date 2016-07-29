@@ -1,9 +1,12 @@
-import checkers from './checkers.js';
+import check from './check.js';
 
 const decorator = (sig) => (func) => {
     return (...args) => {
         const ret = func(...args);
-        checkers[sig.type](ret);
+        const checked = check(sig, ret);
+        if (checked !== true) {
+            throw checked;
+        }
         return ret;
     };
 };

@@ -8,18 +8,4 @@ describe('index', () => {
         assert.isDefined(returns);
         assert.isDefined(check);
     });
-
-    it('can check primitives', () => {
-        const sig = t.string;
-        const primitives = Object.keys(primitiveTests);
-        primitives.forEach((typeA) => {
-            assert.isTrue(check(t[typeA], primitiveTests[typeA]));
-            primitives.forEach((typeB) => {
-                if (typeA !== typeB) {
-                    assert.instanceOf(check(t[typeA], primitiveTests[typeB]),
-                                      Error);
-                }
-            });
-        });
-    });
 });

@@ -4,15 +4,7 @@ React Proptypes: https://github.com/facebook/react/blob/master/src/isomorphic/cl
 
 import t from './type.js';
 import returns from './proxy-decorator.js';
-import checkers from './checkers.js';
-
-function check(sig, obj) {
-    try {
-        return checkers[sig.type](obj);
-    } catch (e) {
-        return e;
-    }
-}
+import check from './check.js';
 
 export {
     t,
