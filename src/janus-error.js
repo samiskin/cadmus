@@ -1,5 +1,5 @@
 export default class JanusError {
-    constructor(data = {type: 'generic'}, chain = []) {
+    constructor(data, chain = []) {
         this.data = data;
         this.chain = chain;
 
@@ -11,8 +11,6 @@ export default class JanusError {
 
     generateMessage() {
         switch (this.data.type) {
-
-            // Checker errors
             case 'type-error': {
                 const {expected, actual} = this.data;
                 this.message = `expected ${expected}, received ${actual}`;
@@ -30,15 +28,6 @@ export default class JanusError {
                 this.message = `unspecified propert${plural}: ${properties.toString()}`;
                 break;
             }
-
-            // Proxy errors
-            case 'undefined-property': {
-                this.message = `access to undefined property ${this.data.propertyName} detected`;
-                break;
-            }
-
-            default:
-                this.message = `error`
         }
 
         if (this.chain.length > 0) {

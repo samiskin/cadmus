@@ -34,6 +34,7 @@ describe('the type checker', () => {
             });
 
             assert.isNotNull(check(sig, {}));
+            assert.isNotNull(check(sig, {required: undefined}));
             assert.isNull(check(sig, {required: 'str'}));
         });
 

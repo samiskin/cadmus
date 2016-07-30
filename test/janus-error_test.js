@@ -7,21 +7,45 @@ const typeErrorData = {
     actual: 'number',
 };
 
+const missingPropertyData = {
+    type: 'missing-property',
+    property: 'str',
+    expectedType: 'string',
+}
+
+const extraPropertyDataSingular = {
+    type: 'extra-property',
+    properties: ['property']
+}
+
+const extraPropertyDataPlural = {
+    type: 'extra-property',
+    properties: ['parent', 'child']
+}
+
 describe('janus error type', () => {
+
+    it('works for all types of errors', () => {
+        assert.doesNotThrow(() => new JanusError(typeErrorData));
+        assert.doesNotThrow(() => new JanusError(missingPropertyData));
+        assert.doesNotThrow(() => new JanusError(extraPropertyDataSingular));
+        assert.doesNotThrow(() => new JanusError(extraPropertyDataPlural));
+    });
+
     it('is an instance of Error', () => {
-        const error = new JanusError();
+        const error = new JanusError(typeErrorData);
         assert.isDefined(error.message);
         assert.isDefined(error.name);
     });
 
     it('chains property names', () => {
         const chain1 = new JanusError(typeErrorData, ['propName']);
-        assert.equal(chain1.message,
-                     'propName: expected string, received number');
+        assert.include(chain1.message,
+                     'propName: ');
 
         const chain2 = new JanusError(typeErrorData, ['parent', 'child']);
-        assert.equal(chain2.message,
-                     'parent.child: expected string, received number');
+        assert.include(chain2.message,
+                     'parent.child: ');
     });
 
     it('can have property names added', () => {
@@ -30,7 +54,6 @@ describe('janus error type', () => {
         chain1.addPropertyParent('parent');
         assert.equal(chain1.message,
                      'parent.child: expected string, received number');
-
     });
 
 });
