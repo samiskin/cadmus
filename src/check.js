@@ -1,17 +1,5 @@
 import getType from './get-type.js';
-
-class JanusError extends Error {
-    constructor(data) {
-        super('');
-        switch (data.type) {
-            case 'type-error': {
-                const {expected, actual} = data;
-                this.message = `expected ${expected}, received ${actual}`;
-                break;
-            }
-        }
-    }
-}
+import JanusError from './janus-error.js';
 
 function validateType(type, element) {
     const elementType = getType(element);
@@ -24,6 +12,53 @@ function validateType(type, element) {
     }
 
     return true;
+}
+
+function isOptional(sig) {
+    return sig.optional === null;
+}
+
+function isStrict(sig) {
+    return sig.strict === null;
+}
+
+function shapeChecker(element, sig) {
+    validateType('object', element);
+    const shape = sig.param;
+    const sigKeys = Object.keys(shape);
+    const elementKeys = new Set(Object.keys(element));
+    sigKeys.forEach((sigKey) => {
+        elementKeys.delete(sigKey);
+        const paramSig = shape[sigKey];
+
+        // Ensure required values exist
+        if (element[sigKey] === undefined) {
+            if (!isOptional(paramSig)) {
+                throw new JanusError({
+                    type: 'missing-property',
+                    property: sigKey,
+                    expectedType: paramSig.type,
+                });
+            } else {
+                return;
+            }
+        }
+
+        // Ensure existing value is of right type
+        const paramError = check(paramSig, element[sigKey]);
+        if (paramError !== null) {
+            paramError.addPropertyParent(sigKey);
+            throw paramError;
+        }
+    });
+
+    // Ensure no extra values are included when strict is set
+    if (isStrict(sig) && elementKeys.size > 0) {
+        throw new JanusError({
+            type: 'extra-property',
+            properties: Array.from(elementKeys),
+        });
+    }
 }
 
 const createPrimitiveChecker = (type) => (ele) => validateType(type, ele);
@@ -62,12 +97,13 @@ const checkers = {
     // objectOf:
     // oneOf:
     // oneOfType:
-    // shape:
+    shape: shapeChecker,
 };
 
 function check(sig, obj) {
     try {
-        return checkers[sig.type](obj, sig);
+        checkers[sig.type](obj, sig);
+        return null;
     } catch (e) {
         return e;
     }

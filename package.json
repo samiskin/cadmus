@@ -4,9 +4,8 @@
   "description": "Runtime typo-checking for JavaScript",
   "main": "lib/index.js",
   "scripts": {
-    "test": "npm run coverage",
-    "coverage": "nyc --check-coverage --lines 100 --branches 100 npm run test",
     "test": "mocha --compilers js:babel-register test",
+    "coverage": "nyc --check-coverage --lines 100 --branches 100 npm run test",
     "test:watch": "mocha --watch --compilers js:babel-register test",
     "prebuild": "rimraf dist lib",
     "build": "npm-run-all --parallel build:*",
@@ -40,6 +39,7 @@
     "babel": "^6.5.2",
     "babel-core": "^6.11.4",
     "babel-loader": "^6.2.4",
+    "babel-preset-node5": "^11.1.0",
     "chai": "^3.5.0",
     "mocha": "^2.5.3",
     "mocha-clean": "^1.0.0",
