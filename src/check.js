@@ -18,6 +18,16 @@ function isOptional(sig) {
     return sig.optional === null;
 }
 
+function anyChecker(element) {
+    if (typeof element === 'undefined') {
+        throw new JanusError({
+            type: 'type-error',
+            expected: 'any',
+            actual: 'undefined',
+        });
+    }
+}
+
 function isStrict(sig) {
     return sig.strict === null;
 }
@@ -89,7 +99,7 @@ const primitiveCheckers = primitives.reduce((obj, primitive) => {
 const checkers = {
     ...primitiveCheckers,
 
-    // any:
+    any: anyChecker,
     // arrayOf:
     // element:
     // instanceOf:

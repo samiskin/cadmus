@@ -6,7 +6,6 @@ import JanusError from '../src/janus-error.js';
 
 describe('the type checker', () => {
     it('works with primitives', () => {
-
         assert.isNull(check(t.string, 'string'));
         assert.instanceOf(check(t.array, true), JanusError);
 
@@ -91,6 +90,16 @@ describe('the type checker', () => {
 
             assert.equal(check(sig, {str: 'str', num: 1, bool: true}).message,
                          `unspecified properties: num,bool`)
+        });
+    });
+
+    describe('any', () => {
+        it('errors on undefined and nothing else', () => {
+            const types = Object.keys(primitiveTests);
+            types.forEach((type) => {
+                assert.isNull(check(t.any, primitiveTests[type]));
+            });
+            assert.isNotNull(check(t.any, undefined));
         });
     });
 });
