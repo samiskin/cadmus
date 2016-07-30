@@ -1,21 +1,11 @@
 import {assert} from 'chai';
 import returns from '../src/proxy-decorator.js';
 import t from '../src/type.js';
+import primitiveTests from './primitive-tests.js';
 
 describe('proxy decorator', () => {
     it('works with primitives', () => {
-        const tests = {
-            'array': [1,2],
-            'bool': false,
-            'date': (new Date()),
-            'func': () => {},
-            'number': 1,
-            'object': {a: 'b'},
-            'regexp': /test/,
-            'string': 'test',
-            'symbol': Symbol('test'),
-        };
-
+        const tests = primitiveTests;
         Object.keys(tests).forEach((typeA) => {
             const sig = t[typeA];
             const funcA = () => tests[typeA];
@@ -29,8 +19,32 @@ describe('proxy decorator', () => {
                 }
             });
         });
+    });
 
+    describe('working with shapes', () => {
+        it('errors on direct undefined property access', () => {
+            const sig = t.shape({
+                str: t.string,
+                num: t.number,
+            });
+            const func = () => ({str: 'str', num: 1});
+            const decorated = returns(sig)(func);
+            assert.equal(decorated().str, 'str');
+            assert.throws(() => decorated().unknown);
+        });
 
+        it('errors on nested undefined property access', () => {
+            const sig = t.shape({
+                shape: t.shape({
+                    str: t.string,
+                }),
+            });
 
+            const obj = {shape: {str: 'str'}};
+            const func = () => obj;
+            const decorated = returns(sig)(func);
+            assert.equal(decorated().shape.str, obj.shape.str);
+            assert.throws(() => decorated().shape.unknown);
+        });
     });
 });
