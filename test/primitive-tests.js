@@ -8,6 +8,7 @@ const tests = {
     'regexp': /test/,
     'string': 'test',
     'symbol': Symbol('test'),
+    'null': null,
 };
 
 const typeAliases = {

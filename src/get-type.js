@@ -4,6 +4,7 @@ export default (value) => {
         array: (v) => Array.isArray(v),
         regexp: (v) => v instanceof RegExp,
         date: (v) => v instanceof Date,
+        null: (v) => v === null,
     };
 
     Object.keys(custom).forEach((t) => {

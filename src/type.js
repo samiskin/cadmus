@@ -38,6 +38,7 @@ const t = {
     regexp: basic('regexp'),
     string: basic('string'),
     symbol: basic('symbol'),
+    null: basic('null'),
 
     any: basic('any'),
     arrayOf: parameterized('arrayOf'),

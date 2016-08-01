@@ -13,7 +13,7 @@ describe('the type checker', () => {
         primitives.forEach((typeA) => {
             assert.isNull(check(t[typeA], primitiveTests[typeA]));
             primitives.forEach((typeB) => {
-                if (typeA !== typeB) {
+                if (typeA !== typeB && typeB !== 'null') {
                     assert.instanceOf(check(t[typeA], primitiveTests[typeB]),
                                       JanusError);
                 }
