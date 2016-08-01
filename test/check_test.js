@@ -103,4 +103,26 @@ describe('the type checker', () => {
             assert.isNotNull(check(t.any, undefined));
         });
     });
+
+    describe('arrayOf', () => {
+        it('errors on non arrays', () => {
+            assert.isNotNull(check(t.arrayOf(t.string), {}));
+            assert.isNotNull(check(t.arrayOf(t.string), 'test'));
+        });
+
+        it('ensures all elements are of inner type', () => {
+            const sig1 = t.arrayOf(t.string);
+            assert.isNotNull(check(sig1, ['1', '2', 3]));
+            assert.isNull(check(sig1, ['1', '2', '3']));
+            const sig2 = t.arrayOf(t.shape({num: t.number}));
+            assert.isNotNull(check(sig2, [{num: 1}, {num: '2'}]));
+            assert.isNull(check(sig2, [{num: 1}, {num: 2}]));
+        });
+
+        it('communicates the correct erroring index', () => {
+            const sig = t.arrayOf(t.number);
+            assert.include(check(sig, [1, 2, '3', 4, '5']).message, '2');
+            assert.include(check(sig, ['1', 2, '3', 4, '5']).message, '0');
+        });
+    });
 });

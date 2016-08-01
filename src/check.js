@@ -28,6 +28,18 @@ function anyChecker(element) {
     }
 }
 
+function arrayOfChecker(element, sig) {
+    validateType('array', element);
+    const paramSig = sig.param;
+    element.forEach((item, index) => {
+        const itemError = check(paramSig, item);
+        if (itemError !== null) {
+            itemError.addPropertyParent(index);
+            throw itemError;
+        }
+    });
+}
+
 function isStrict(sig) {
     return sig.strict === null;
 }
@@ -100,7 +112,7 @@ const checkers = {
     ...primitiveCheckers,
 
     any: anyChecker,
-    // arrayOf:
+    arrayOf: arrayOfChecker,
     // element:
     // instanceOf:
     // node:
