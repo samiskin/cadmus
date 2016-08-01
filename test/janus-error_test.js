@@ -40,20 +40,18 @@ describe('janus error type', () => {
 
     it('chains property names', () => {
         const chain1 = new JanusError(typeErrorData, ['propName']);
-        assert.include(chain1.message,
-                     'propName: ');
+        assert.include(chain1.message, 'propName: ');
 
         const chain2 = new JanusError(typeErrorData, ['parent', 'child']);
-        assert.include(chain2.message,
-                     'parent.child: ');
+        assert.include(chain2.message, 'parent.child: ');
     });
 
     it('can have property names added', () => {
         const chain1 = new JanusError(typeErrorData);
         chain1.addPropertyParent('child');
+        chain1.addPropertyParent(1);
         chain1.addPropertyParent('parent');
-        assert.equal(chain1.message,
-                     'parent.child: expected string, received number');
+        assert.include(chain1.message, 'parent.1.child:');
     });
 
 });

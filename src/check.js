@@ -1,6 +1,16 @@
 import getType from './get-type.js';
 import JanusError from './janus-error.js';
 
+const ANONYMOUS = '<<anonymous>>';
+
+const getClassName = (element) => {
+    /* istanbul ignore if */
+    if (!element.constructor || !element.constructor.name) {
+        return ANONYMOUS;
+    }
+    return element.constructor.name;
+}
+
 function validateType(type, element) {
     const elementType = getType(element);
     if (elementType !== type) {
@@ -37,6 +47,43 @@ function arrayOfChecker(element, sig) {
             itemError.addPropertyParent(index);
             throw itemError;
         }
+    });
+}
+
+function instanceOfChecker(element, sig) {
+    if (!(element instanceof sig.param)) {
+        throw new JanusError({
+            type: 'not-instanceof',
+            expected: sig.param.name || /* istanbul ignore next */ ANONYMOUS,
+            actual: getClassName(element),
+        });
+    }
+}
+
+function objectOfChecker(element, sig) {
+    validateType('object', element);
+    const paramSig = sig.param;
+    Object.keys(element).forEach((key) => {
+        const valueError = check(paramSig, element[key]);
+        if (valueError !== null) {
+            valueError.addPropertyParent(key);
+            throw valueError;
+        }
+    });
+}
+
+function oneOfChecker(element, sig) {
+    const possibleValues = sig.param;
+    for (let i = 0; i < possibleValues.length; i++) {
+        if (Object.is(element, possibleValues[i])) {
+            return;
+        }
+    }
+
+    throw new JanusError({
+        type: 'not-one-of',
+        expected: JSON.stringify(possibleValues),
+        actual: element,
     });
 }
 
@@ -113,11 +160,10 @@ const checkers = {
 
     any: anyChecker,
     arrayOf: arrayOfChecker,
-    // element:
-    // instanceOf:
+    instanceOf: instanceOfChecker,
     // node:
-    // objectOf:
-    // oneOf:
+    objectOf: objectOfChecker,
+    oneOf: oneOfChecker,
     // oneOfType:
     shape: shapeChecker,
 };

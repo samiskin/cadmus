@@ -13,7 +13,7 @@ export default class JanusError {
         switch (this.data.type) {
             case 'type-error': {
                 const {expected, actual} = this.data;
-                this.message = `expected ${expected}, received ${actual}`;
+                this.message = `expected type ${expected}, received ${actual}`;
                 break;
             }
             case 'missing-property': {
@@ -26,6 +26,16 @@ export default class JanusError {
                 const {properties} = this.data;
                 const plural = properties.length > 1 ? 'ies' : 'y';
                 this.message = `unspecified propert${plural}: ${properties.toString()}`;
+                break;
+            }
+            case 'not-instanceof': {
+                const {expected, actual} = this.data;
+                this.message = `expected instance of ${expected}, received ${actual}`;
+                break;
+            }
+            case 'not-one-of': {
+                const {expected, actual} = this.data;
+                this.message = `expected one of ${expected}, received ${actual}`;
                 break;
             }
         }

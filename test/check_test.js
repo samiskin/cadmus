@@ -22,7 +22,7 @@ describe('the type checker', () => {
 
         assert.equal(
             check(t.array, primitiveTests.bool).message,
-            'expected array, received boolean'
+            'expected type array, received boolean'
         );
     });
 
@@ -123,6 +123,41 @@ describe('the type checker', () => {
             const sig = t.arrayOf(t.number);
             assert.include(check(sig, [1, 2, '3', 4, '5']).message, '2');
             assert.include(check(sig, ['1', 2, '3', 4, '5']).message, '0');
+        });
+    });
+
+    describe('instanceOf', () => {
+        it('should warn for invalid instances', () => {
+            class Person{}
+            class Cat{}
+
+            assert.isNull(check(t.instanceOf(Person), new Person()));
+            assert.isNotNull(check(t.instanceOf(Person), new Cat()));
+        });
+
+        it('should show <<anonymous>> if no constructor', () => {
+            const func = () => {};
+            func.constructor = null;
+            assert.include(check(t.instanceOf(String), func).message, '<<anonymous>>');
+        });
+    });
+
+    describe('objectOf', () => {
+        it('should warn for invalid instances', () => {
+            const sig = t.objectOf(t.string);
+            assert.isNull(check(sig, {a: '1', b: '2', c: '3'}));
+            assert.isNotNull(check(sig, {a: '1', b: 2, c: '3'}));
+            assert.include(check(sig, {a: '1', b: 2, c: '3'}).message, 'b');
+        });
+    });
+
+    describe('oneOf', () => {
+        it('should warn for invalid instances', () => {
+            const sig = t.oneOf([1, '2']);
+            assert.isNull(check(sig, 1));
+            assert.isNull(check(sig, '2'));
+            assert.isNotNull(check(sig, '3'));
+            assert.isNotNull(check(sig, 2));
         });
     });
 });
