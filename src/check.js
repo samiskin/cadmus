@@ -87,6 +87,21 @@ function oneOfChecker(element, sig) {
     });
 }
 
+function oneOfTypeChecker(element, sig) {
+    const possibleTypes = sig.param;
+    for (let i = 0; i < possibleTypes.length; i++) {
+        if (check(possibleTypes[i], element) === null) {
+            return;
+        }
+    }
+
+    throw new JanusError({
+        type: 'not-one-of-type',
+        expected: JSON.stringify(possibleTypes.map(sig => sig.type)),
+        actual: element,
+    });
+}
+
 function isStrict(sig) {
     return sig.strict === null;
 }
@@ -164,7 +179,7 @@ const checkers = {
     // node:
     objectOf: objectOfChecker,
     oneOf: oneOfChecker,
-    // oneOfType:
+    oneOfType: oneOfTypeChecker,
     shape: shapeChecker,
 };
 

@@ -38,6 +38,9 @@ export default class JanusError {
                 this.message = `expected one of ${expected}, received ${actual}`;
                 break;
             }
+            case 'not-one-of-type': {
+                this.message = `expected one of types ${expected}, received ${actual}`;
+            }
         }
 
         if (this.chain.length > 0) {

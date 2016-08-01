@@ -160,4 +160,14 @@ describe('the type checker', () => {
             assert.isNotNull(check(sig, 2));
         });
     });
+
+    describe('oneOfType', () => {
+        it('should warn for invalid instances', () => {
+            const sig = t.oneOfType([t.string, t.bool]);
+            assert.isNull(check(sig, true));
+            assert.isNull(check(sig, '2'));
+            assert.isNotNull(check(sig, 1));
+            assert.isNotNull(check(sig, [false]));
+        });
+    });
 });
