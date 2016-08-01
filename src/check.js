@@ -183,9 +183,19 @@ const checkers = {
     shape: shapeChecker,
 };
 
+const nullableCheckers = Object.keys(checkers).reduce((obj, type) => {
+    const originalChecker = checkers[type];
+    obj[type] = (element, sig) => {
+        if (element !== null) {
+            originalChecker(element, sig);
+        }
+    };
+    return obj;
+}, {});
+
 function check(sig, obj) {
     try {
-        checkers[sig.type](obj, sig);
+        nullableCheckers[sig.type](obj, sig);
         return null;
     } catch (e) {
         return e;

@@ -1,8 +1,9 @@
-function basic(type, optional = false) {
+function basic(type, optional = false, nullable = false) {
     return {
         type,
         optional: optional ? null
-            : basic(type, true),
+            : basic(type, true, nullable),
+        param: null,
     };
 }
 
@@ -40,9 +41,7 @@ const t = {
 
     any: basic('any'),
     arrayOf: parameterized('arrayOf'),
-    element: parameterized('element'),
     instanceOf: parameterized('instanceOf'),
-    node: parameterized('node'),
     objectOf: parameterized('objectOf'),
     oneOf: parameterized('oneOf'),
     oneOfType: parameterized('oneOfType'),

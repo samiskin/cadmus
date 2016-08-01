@@ -170,4 +170,11 @@ describe('the type checker', () => {
             assert.isNotNull(check(sig, [false]));
         });
     });
+
+    it('allows null', () => {
+        assert.isNull(check(t.string, null));
+        assert.isNull(check(t.array, null));
+        assert.isNull(check(t.shape({str: t.string}), null));
+        assert.isNull(check(t.instanceOf(String), null));
+    });
 });
