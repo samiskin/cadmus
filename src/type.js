@@ -1,9 +1,41 @@
-function basic(type, optional = false) {
-    return {
+function basic(type, base) {
+    return optional({
         type,
-        optional: optional ? null
-            : basic(type, true),
         param: null,
+    });
+}
+
+function optional(base) {
+    return {
+        ...base,
+        optional: {
+            ...base,
+            optional: null,
+        },
+    };
+}
+
+function strictOptional(base) {
+    return {
+        ...base,
+        strict: {
+            ...base,
+            strict: null,
+            optional: {
+                ...base,
+                optional: null,
+                strict: null,
+            }
+        },
+        optional: {
+            ...base,
+            optional: null,
+            strict: {
+                ...base,
+                optional: null,
+                strict: null,
+            }
+        }
     };
 }
 
@@ -15,14 +47,9 @@ function parameterized(name) {
 }
 
 function shapeType() {
-    return (param) => ({
-        ...basic('shape'),
+    return (param) => strictOptional({
+        type: 'shape',
         param,
-        strict: {
-            ...basic('shape'),
-            param,
-            strict: null,
-        }
     });
 }
 
