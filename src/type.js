@@ -1,8 +1,8 @@
-function basic(type, optional = false, nullable = false) {
+function basic(type, optional = false) {
     return {
         type,
         optional: optional ? null
-            : basic(type, true, nullable),
+            : basic(type, true),
         param: null,
     };
 }
