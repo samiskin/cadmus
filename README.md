@@ -1,2 +1,2 @@
-# janus
-Runtime typo-checking for JavaScript
+# Cadmus
+Function signature specification and runtime assertion library for JavaScript
