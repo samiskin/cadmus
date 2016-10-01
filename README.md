@@ -25,3 +25,22 @@ getUser() {
 
 getUser() // Error thrown, since grades.subject is missing
 ```
+
+Possible signature objects are:
+```
+array
+bool
+date
+func
+null
+number
+object
+string
+
+any
+arrayOf(<type>)
+instanceOf(<object>)
+oneOf([...<allowableValues>])
+oneOfType([...<allowableTypes])
+shape({...<map of keyName to signature>})
+```
