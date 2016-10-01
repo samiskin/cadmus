@@ -14,14 +14,14 @@ var user = t.shape({
 
 @returns(user)
 getUser() {
-  ...
-  
   return {
     name: 'John',
     gender: 'M',
     grades: [
       grade: 5, 
-    ], // Error thrown on getUser(), as subject is missing
+    ],
   };
 }
+
+getUser() // Error thrown, since grades.subject is missing
 ```
