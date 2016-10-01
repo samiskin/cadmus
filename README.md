@@ -1,6 +1,6 @@
 # Cadmus
 
-Cadmus allows for lightweight runtime function return specification for JavaScript applications.
+Cadmus is a lightweight library which allows specifications on function return values which are checked at runtime.
 
 ```javascript
 var user = t.shape({
