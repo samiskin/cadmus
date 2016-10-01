@@ -3,15 +3,16 @@
 Cadmus allows for lightweight runtime function return specification for JavaScript applications.
 
 ```javascript
-
-@returns(t.shape({
+var user = t.shape({
   name: t.string,
   grades: t.arrayOf(t.shape({
     subject: t.string,
     grade: t.number,
   })),
   gender: t.oneOf(['M', 'F']).optional,
-}))
+});
+
+@returns(user)
 getUser() {
   ...
   
